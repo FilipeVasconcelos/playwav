@@ -24,24 +24,22 @@ def realexp(freq,ph,ts,N,a):
 def cosinus(freq,ph,ts,N):
     tpi=2.*np.pi
     xe=np.zeros(N,dtype=np.complex_)
-    #for k in range(-int(N/2),int(N/2)-1):
     for k in range(N):
-        xe[k]=np.cos(freq*tpi*k*ts+ph)#*np.exp(-(k*ts)**2/0.25)
+        xe[k]=np.cos(freq*tpi*k*ts+ph)
     return xe
 
 def sinus(freq,ph,ts,N):
     tpi=2.*np.pi
     xe=np.zeros(N,dtype=np.complex_)
-    #for k in range(-int(N/2),int(N/2)-1):
     for k in range(N):
-        xe[k]=np.sin(freq*tpi*k*ts+ph)#*np.exp(-(k*ts)**2/0.25)
+        xe[k]=np.sin(freq*tpi*k*ts+ph)
     return xe
 
 def exp_comp(freq,ph,ts,N):
     tpi=2.*np.pi
     xe=np.zeros(N,dtype=np.complex_)
     for k in range(N):
-        xe[k]=complex(np.cos(freq*tpi*k*ts+ph),np.sin(freq*tpi*k*ts+ph))#*np.exp(-(k*ts)**2/0.25)
+        xe[k]=complex(np.cos(freq*tpi*k*ts+ph),np.sin(freq*tpi*k*ts+ph))
     return xe
 
 def main_parser():                                                                                                            
@@ -166,7 +164,6 @@ if __name__=="__main__":
 
         fxe.write("# "+str(N)+'\n')
         fxe.write("# "+str(fs)+'\n')
-        #for k in range(-int(N/2),int(N/2)):
         for k in range(N):
             t=k*ts
             real=xe[k].real
