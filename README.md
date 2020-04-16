@@ -4,8 +4,9 @@
     ./gen_notes.sh
 # jouer des notes
     ./play.sh "doN doN laN"
-# jouer frereJacques
+# jouer un morceau enregistré 
     ./frereJacques
+    ./ErikSatie
 
 
 ./playkey
