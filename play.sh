@@ -6,4 +6,8 @@ do
     tab[${k}]="${note}.wav"
     k=$((k+1))
 done
-mplayer ${tab[*]}
+
+while [ 1 ]
+do
+    mplayer ${tab[*]}
+done
