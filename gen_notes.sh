@@ -4,7 +4,7 @@ notes=("do" "doD" "ré" "réD" "mi" "fa" "faD" "sol" "solD" "la" "laD" "si")
 freq=("261.6" "277.2" "293.7" "311.1" "329.6" "349.2" "370.0" "392.0" "415.3" "440.0" "466.2" "493.9")
 octaves=("0.125" "0.25" "0.5" "1" "2" "4" "8" "16" "32" "64")
 n=${#notes[*]}
-for octave in 0 1 2 3 4 5 6 7 8 9  
+for octave in 2 3 4 5 
 do
     for temps in "N" "B"
     do
@@ -21,7 +21,7 @@ do
             echo ${i} ${notes[${i}]} ${note} ${temps}
             freqo=$(echo "scale=5;${freq[${i}]}*${octaves[${octave}]}"|bc)
             python3 generate_1d_signal.py -p ${ktemps} -fs 44100 -s realexp -d ${freqo} 0 ${valtemps} -w ${notes[${i}]}${temps}_O${octave}.wav
-            mplayer ${notes[${i}]}${temps}_O${octave}.wav
+#            mplayer ${notes[${i}]}${temps}_O${octave}.wav
         done
     done
 done
