@@ -6,3 +6,8 @@
     ./play.sh "doN doN laN"
 # jouer frereJacques
     ./frereJacques
+
+
+./playkey
+
+press aqwzsxed
