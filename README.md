@@ -12,3 +12,7 @@
 ./playkey
 
 press aqwzsxed
+
+Version Python
+./gen_notes.py
+
