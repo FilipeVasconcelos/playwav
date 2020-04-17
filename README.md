@@ -1,18 +1,20 @@
 # playwav
 
-# générer "toutes" les notes
+# générer 'toutes' les notes
     ./gen_notes.sh
+
 # jouer des notes
     ./play.sh "doN doN laN"
+
 # jouer un morceau enregistré 
     ./frereJacques
     ./ErikSatie
 
+# jouer au clavier
+    ./playkey
 
-./playkey
+    press aqwzsxed
 
-press aqwzsxed
-
-Version Python
-./gen_notes.py
+# version Python (la notation des notes diffère de la version bash)
+    ./gen_notes.py
 

@@ -3,7 +3,7 @@ tab=()
 k=0
 for note in $*
 do
-    tab[${k}]="${note}_O4.wav"
+    tab[${k}]="${note}.wav"
     k=$((k+1))
 done
 
