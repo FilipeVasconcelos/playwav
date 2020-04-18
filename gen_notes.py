@@ -10,21 +10,21 @@ from scipy.io import wavfile
 # ------------------------------------------------------------------------------
 fs=float(44100) #Hz fréquence d'échantionnage
 ts=1./fs
-AMPLITUDE=10**5
+AMPLITUDE=2**13 #PCM int16 MAX IS AMPLITUDE between -2**15 and 2**15 
 # ------------------------------------------------------------------------------
-key_freq={""    :0.0,
-          "do"  :261.6,
-          "doD" :277.2, 
-          "re"  :293.7, 
-          "reD" :311.1, 
-          "mi"  :329.6, 
-          "fa"  :349.2, 
-          "faD" :370.0, 
-          "sol" :392.0, 
-          "solD":415.3, 
-          "la"  :440.0, 
-          "sib" :466.2, 
-          "si"  :493.9
+key_freq={""    : 0.0,
+          "do"  : 261.6,
+          "doD" : 277.2, 
+          "re"  : 293.7, 
+          "reD" : 311.1, 
+          "mi"  : 329.6, 
+          "fa"  : 349.2, 
+          "faD" : 370.0, 
+          "sol" : 392.0, 
+          "solD": 415.3, 
+          "la"  : 440.0, 
+          "sib" : 466.2, 
+          "si"  : 493.9
           }
 # ------------------------------------------------------------------------------
 octavesCoeff=[0.125]
@@ -37,8 +37,7 @@ def signal(freq,ph,ts,N,a):
     tpi=2.*np.pi
     xe=np.zeros(N,dtype=np.complex_)
     for k in range(N):
-        xe[k]=((k*ts)**0.1)*np.sin(freq*tpi*k*ts+ph)*np.exp(a*(k*ts))
-    #    xe[k]=np.sin(freq*tpi*k*ts+ph)*np.exp(a*(k*ts))
+        xe[k]=((k*ts)**0.2)*np.sin(freq*tpi*k*ts+ph)*np.exp(a*(k*ts))
     return xe
 # ------------------------------------------------------------------------------
 # name = keyo3dx
@@ -82,7 +81,7 @@ def genNote(notes,plotNote=False,writeWav=False,playWav=False,verbose=0):
             print("INFO : phase     key      ()"   ,phas)
             print("INFO : damping   key      (Hz)" ,a)
         xe+=signal(freq,phas,ts,N,a)
-        phas+=90
+        phas+=0.01
     if plotNote :
         t=np.linspace(0,ts*N,N)
         fig, ax = plt.subplots(1, 1)
@@ -94,169 +93,221 @@ def genNote(notes,plotNote=False,writeWav=False,playWav=False,verbose=0):
     if writeWav :
         notenamefile=notename+".wav"
         xs=np.zeros(N,dtype=np.int16)
-        norm=2.0/np.sqrt(N)
         for k in range(N):
-            xs[k]=AMPLITUDE*xe[k].real*norm
+            xs[k]=AMPLITUDE*xe[k].real
         wavfile.write(notenamefile,int(fs),xs)
 
 # ------------------------------------------------------------------------------
 if __name__ =="__main__":
 
-    satieRythmique=[
-           ["solO2dN"],
-           ["siO2dC","reO3dC","faDO3dC"],
-           ["reO2dN"],
-           ["laO2dC","doDO3dC","faDO3dC"],
-           ["solO2dN"],
-           ["siO2dC","reO3dC","faDO3dC"],
-           ["reO2dN"],
-           ["laO2dC","doDO3dC","faDO3dC"]
-          ]
-    satieMelodie=[
-            ["faDO4d1"],
-            ["laO4d1"],
-            ["solO4d1"],
-            ["faDO4d1"],
-            ["doDO4d1"],
-            ["siO3d1"],
-            ["doDO4d1"],
-            ["reO4d1"],
-            ["laO3d1"]]
-    satie=[
-        #-----------------------------------------
-           ["solO2d1"],
-           ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
-           ["reO2d1"],
-           ["laO2d2","doDO3d2","faDO3d2"],
-        #-----------------------------------------
-           ["solO2d1"],
-           ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
-           ["reO2d1"],
-           ["laO2d2","doDO3d2","faDO3d2"],
-        #-----------------------------------------
-           ["solO2d1"],
-           ["siO2d1","reO3d1","faDO3d1","faDO4d1"],
-           ["siO2d1","reO3d1","faDO3d1","laO4d1"],
-        #-----------------------------------------
-           ["reO2d1","solO4d1"],
-           ["laO2d1","doDO3d1","faDO3d1","faDO4d1"],
-           ["laO2d1","doDO3d1","faDO3d1","doDO4d1"],
-        #-----------------------------------------
-           ["solO2d1","siO3d1"],
-           ["siO2d1","reO3d1","faDO3d1","doDO4d1"],
-           ["siO2d1","reO3d1","faDO3d1","reO4d1"],
-           ["laO3d2","solO2d2"]
-        #-----------------------------------------
-          ]
     satie_voix1=[
-        #-----------------------------------------
+        #1----------------------------------------
            ["O0d1"],
            ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
+        #2----------------------------------------
            ["O0d1"],
            ["laO2d2","doDO3d2","faDO3d2"],
-        #-----------------------------------------
+        #3----------------------------------------
            ["O0d1"],
            ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
+        #4----------------------------------------
            ["O0d1"],
            ["laO2d2","doDO3d2","faDO3d2"],
-        #-----------------------------------------
+        #5----------------------------------------
            ["O0d1"],
            ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
+        #6----------------------------------------
            ["O0d1"],
            ["laO2d2","doDO3d2","faDO3d2"],
-        #-----------------------------------------
+        #7----------------------------------------
            ["O0d1"],
            ["siO2d2","reO3d2","faDO3d2"],
-        #-----------------------------------------
-           ["O0d3"],
+        #8----------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #9----------------------------------------
+           ["O0d1"],
+           ["siO2d2","reO3d2","faDO3d2"],
+        #10---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #11---------------------------------------
+           ["O0d1"],
+           ["siO2d2","reO3d2","faDO3d2"],
+        #12---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #13---------------------------------------
+           ["O0d1"],
+           ["siO2d2","reO3d2","faDO3d2"],
+        #14---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #15---------------------------------------
+           ["O0d1"],
+           ["siO2d2","reO3d2","faDO3d2"],
+        #16---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #17---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
+        #18---------------------------------------
+           ["O0d1"],
+           ["siO2d2","reO3d2","faDO3d2"],
+        #19---------------------------------------
+           ["O0d1"],
+           ["laO2d2","faDO2d2"],
+        #20---------------------------------------
+           ["O0d1"],
+           ["laO2d2","doDO3d2","faDO3d2"],
           ]
     satie_voix2=[
-        #-----------------------------------------
+        #1----------------------------------------
            ["solO2d3"],
-        #-----------------------------------------
+        #2----------------------------------------
            ["reO2d3"],
-        #-----------------------------------------
+        #3----------------------------------------
            ["solO2d3"],
-        #-----------------------------------------
+        #4----------------------------------------
            ["reO2d3"],
-        #-----------------------------------------
+        #5----------------------------------------
            ["solO2d3"],
-        #-----------------------------------------
+        #6----------------------------------------
            ["reO2d3"],
-        #-----------------------------------------
+        #7----------------------------------------
            ["solO2d3"],
-        #-----------------------------------------
-           ["reO2d3"]
+        #8----------------------------------------
+           ["reO2d3"],
+        #9----------------------------------------
+           ["solO2d3"],
+        #10---------------------------------------
+           ["reO2d3"],
+        #11---------------------------------------
+           ["solO2d3"],
+        #12---------------------------------------
+           ["reO2d3"],
+        #13---------------------------------------
+           ["solO2d3"],
+        #14---------------------------------------
+           ["reO2d3"],
+        #15---------------------------------------
+           ["solO2d3"],
+        #16---------------------------------------
+           ["reO2d3"],
+        #17---------------------------------------
+           ["faDO2d3"],
+        #18---------------------------------------
+           ["siO1d3"],
+        #17---------------------------------------
+           ["miO2d3"],
+        #18---------------------------------------
+           ["miO2d3"]
           ]
     satie_voix3=[
-        #-----------------------------------------
-           ["O0d1"],
-           ["O0d1"],
-           ["O0d1"],
-        #-----------------------------------------
-           ["O0d1"],
-           ["O0d1"],
-           ["O0d1"],
-        #-----------------------------------------
-           ["O0d1"],
-           ["O0d1"],
-           ["O0d1"],
-        #-----------------------------------------
-           ["O0d1"],
-           ["O0d1"],
-           ["O0d1"],
-        #-----------------------------------------
+        #1----------------------------------------
+           ["O0d3"],
+        #2----------------------------------------
+           ["O0d3"],
+        #3----------------------------------------
+           ["O0d3"],
+        #4----------------------------------------
+           ["O0d3"],
+        #5----------------------------------------
            ["O0d1"],
            ["faDO4d1"],
            ["laO4d1"],
-        #-----------------------------------------
+        #6----------------------------------------
            ["solO4d1"],
            ["faDO4d1"],
            ["doDO4d1"],
-        #-----------------------------------------
+        #7----------------------------------------
            ["siO3d1"],
            ["doDO4d1"],
            ["reO4d1"],
-        #-----------------------------------------
-           ["laO3d3"]
+        #8----------------------------------------
+           ["laO3d3"],
+        #9----------------------------------------
+           ["faDO3d3"],
+        #10---------------------------------------
+           ["faDO3d3"],
+        #11---------------------------------------
+           ["faDO3d3"],
+        #12---------------------------------------
+           ["faDO3d3"],
+        #13---------------------------------------
+           ["O0d1"],
+           ["faDO4d1"],
+           ["laO4d1"],
+        #14---------------------------------------
+           ["solO4d1"],
+           ["faDO4d1"],
+           ["doDO4d1"],
+        #15---------------------------------------
+           ["siO3d1"],
+           ["doDO4d1"],
+           ["reO4d1"],
+        #16---------------------------------------
+           ["laO3d3"],
+        #17---------------------------------------
+           ["doDO4d3"],
+        #18---------------------------------------
+           ["faDO4d3"],
+        #19---------------------------------------
+           ["miO3d3"],
+        #20---------------------------------------
+           ["miO3d3"],
           ]
 
-    piecename="satie.wav"
-    tracknamefiles=""
-    tracknames=["satie_voix1.wav","satie_voix2.wav","satie_voix3.wav"]
-    for ktrack,track in enumerate([satie_voix1,satie_voix2,satie_voix3]):
-        print(tracknames[ktrack])
+    playNote=False
 
+    piecename="satie"
+    tracknamefiles=""
+    tracknames=["satie_voix1","satie_voix2","satie_voix3"]
+    for ktrack,track in enumerate([satie_voix1,satie_voix2,satie_voix3]):
+        print(60*'=')
+        print("Track : ",ktrack)
+        print("Name  : "+tracknames[ktrack])
+        print(60*'=')
+        print(60*'-')
+        print("Gen Keys ")
+        print(60*'-')
         # ----------------------------------------
         # génération des notes (sur un set Python)
         # ----------------------------------------
         knote=0
         setNotes=set(tuple(i) for i in track)
         for note in setNotes :
-            genNote(note,plotNote=True,writeWav=True,verbose=11)
-        print(len(setNotes)," notes générés",set(tuple(i) for i in track))
+            genNote(note,plotNote=False,writeWav=True,verbose=0)
+            print(note)
+        print("# Keys  : ",len(setNotes))
         notenamefiles=''
         # ----------------------------------------
         # lecture
+        # ----------------------------------------
+        print(60*'-')
+        print("Gen Track ")
+        print(60*'-')
         for notes in track:
             notename=''
             for note  in notes:
                 notename+=note
+            print(notename)
             notenamefile=notename+".wav"
-            print(notenamefile)
             notenamefiles+=notenamefile+' '
-            os.system("play "+notenamefile+" > /dev/null 2>&1")  # jouer la note dans l'ordre de la voix
-        os.system("sox "+notenamefiles+tracknames[ktrack]) # fichier wav de la voix (track)
-        tracknamefiles+=tracknames[ktrack]+" "
-    os.system("sox -m "+tracknamefiles+piecename) # 
-    os.system("sox "+piecename+" out.wav vol 10db bass +6")
-    os.system("mv out.wav "+piecename) 
-    os.system("play "+piecename)  # jouer tout le morceau 
+            if playNote :
+                os.system("play "+notenamefile+" vol 10dB > /dev/null 2>&1")  # jouer la note dans l'ordre
+        os.system("sox "+notenamefiles+tracknames[ktrack]+'.wav')       # concatener les notes 
+        tracknamefiles+=tracknames[ktrack]+".wav "+" "
+
+
+    os.system("sox -m "+tracknamefiles+piecename+'.wav')                # mixer les voix
+    os.system("sox "+piecename+".wav "+" out.wav vol 12db bass +6")
+    os.system("mv out.wav "+piecename+".wav") 
+    print(60*'=')
+    print("Play  : ")
+    print(60*'=')
+    os.system("play "+piecename+".wav")  # jouer tout le morceau 
 
 
     
