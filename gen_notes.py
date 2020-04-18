@@ -10,7 +10,7 @@ from scipy.io import wavfile
 # ------------------------------------------------------------------------------
 fs=float(44100) #Hz fréquence d'échantionnage
 ts=1./fs
-AMPLITUDE=10**6
+AMPLITUDE=10**5
 # ------------------------------------------------------------------------------
 key_freq={""    :0.0,
           "do"  :261.6,
@@ -250,11 +250,13 @@ if __name__ =="__main__":
             notenamefile=notename+".wav"
             print(notenamefile)
             notenamefiles+=notenamefile+' '
-            os.system("mplayer "+notenamefile+" > /dev/null 2>&1")  # jouer la note dans l'ordre de la voix
+            os.system("play "+notenamefile+" > /dev/null 2>&1")  # jouer la note dans l'ordre de la voix
         os.system("sox "+notenamefiles+tracknames[ktrack]) # fichier wav de la voix (track)
         tracknamefiles+=tracknames[ktrack]+" "
     os.system("sox -m "+tracknamefiles+piecename) # 
-    os.system("mplayer "+piecename+" > /dev/null 2>&1")  # jouer tous le morceau 
+    os.system("sox "+piecename+" out.wav vol 10db bass +6")
+    os.system("mv out.wav "+piecename) 
+    os.system("play "+piecename)  # jouer tout le morceau 
 
 
     
