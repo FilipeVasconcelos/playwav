@@ -31,13 +31,18 @@ octavesCoeff=[0.125]
 for i in range(1,10):
     octavesCoeff.append(octavesCoeff[-1]*2)
 # ------------------------------------------------------------------------------
-dureeData={"d4":(17,-3),"d3":(16.585,-2),"d2":(16,-4),"d1":(15,-6),"d0":(14,-10) }
+dureeData={"d4":(17,-3),"d3":(16.585,-2),"d2":(16,-4),"d1":(15,-6),"d0":(14,-10) } #originale
+#dureeData={"d4":(16,-3),"d3":(15.585,-2),"d2":(15,-4),"d1":(14,-6),"d0":(13,-10) } # 2fois plus rapide 
 # ------------------------------------------------------------------------------
-def signal(freq,ph,ts,N,a):
+def signal(freq,ph,ts,N,a,harmonics):
     tpi=2.*np.pi
     xe=np.zeros(N,dtype=np.complex_)
     for k in range(N):
-        xe[k]=((k*ts)**0.2)*np.sin(freq*tpi*k*ts+ph)*np.exp(a*(k*ts))
+        #xe[k]=((k*ts)**0.2)*np.sin(freq*tpi*k*ts+ph)*np.exp(a*(k*ts)) # original
+        xetmp=0.0
+        for harm in harmonics:
+            xetmp+=harm[0]*np.sin(harm[1]*freq*tpi*k*ts+ph)
+        xe[k]+=((k*ts)**0.2)*np.exp(a*(k*ts))*xetmp # enveloppe
     return xe
 # ------------------------------------------------------------------------------
 # name = keyo3dx
@@ -58,6 +63,92 @@ def maxdureeNotes(notes):
         if dureeData[d][0] > dureeData[maxd][0] :
             maxd=d
     return maxd
+# ------------------------------------------------------------------------------
+def genHarmonics(o):
+    h=[]
+    # (Pur)
+    if False :
+        for k in range(9):
+            if k-o == 0 :
+                h.append((1.0,1.0))
+    
+    # 1
+    if False :
+        for k in range(9):
+            if k-o < 0 :
+                a=1.0/(8.5*abs(k-o))
+                b=1.0/(2*abs(k-o))
+                if a > 1e-4 : h.append((a,b))
+            elif k-o > 0 :
+                a=1.0/(5.5*abs(k-o))
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            else:
+                h.append((1.0,1.0))
+
+    # 2
+    if False :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(3*abs(k-o))
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+
+    # 3
+    if False :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(4*abs(k-o)**1.5)
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+
+    #4 
+    if False :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(4*abs(k-o)**1.5)
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+
+    #5 
+    if False :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(6.5*np.sqrt((k-o)))
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+    
+    #6 
+    if False :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(2*(k-o)**2)
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+    # 7
+    if True :
+        for k in range(9):
+            if k-o > 0 :
+                a=1.0/(8*(k-o)**0.25)
+                b=2*abs(k-o)
+                if a > 1e-4 : h.append((a,b))
+            elif k-o == 0 :
+                h.append((1.0,1.0))
+
+    for ele in h :
+        print(ele)
+    print("nombre d'harmoniques",len(h))
+    return h
 # ------------------------------------------------------------------------------
 def genNote(notes,plotNote=False,writeWav=False,playWav=False,verbose=0):
     maxd=maxdureeNotes(notes)
@@ -80,7 +171,7 @@ def genNote(notes,plotNote=False,writeWav=False,playWav=False,verbose=0):
             print("INFO : frequence key      (Hz)" ,freq)
             print("INFO : phase     key      ()"   ,phas)
             print("INFO : damping   key      (Hz)" ,a)
-        xe+=signal(freq,phas,ts,N,a)
+        xe+=signal(freq,phas,ts,N,a,genHarmonics(o))
         phas+=0.01
     if plotNote :
         t=np.linspace(0,ts*N,N)
@@ -259,12 +350,39 @@ if __name__ =="__main__":
            ["miO3d3"],
           ]
 
-    playNote=False
+    if True :
+        Partition=[satie_voix1,satie_voix2,satie_voix3]
+        playNote=False
+        piecename="satie"
+        tracknames=["satie_voix1","satie_voix2","satie_voix3"]
 
-    piecename="satie"
+    frereJacques1=[
+                  ["doO4d1"],
+                  ["reO4d1"],
+                  ["miO4d1"],
+                  ["doO4d1"], 
+                  ["doO4d1"],
+                  ["reO4d1"],
+                  ["miO4d1"],
+                  ["doO4d1"],
+                  ["miO4d1"],
+                  ["faO4d1"],
+                  ["solO4d2"],
+                  ["miO4d1"],
+                  ["faO4d1"],
+                  ["solO4d2"],
+                  ["O0d1"],
+                  ["O0d1"],
+                  ["O0d1"],
+                  ]
+    if False:
+        Partition=[frereJacques1]
+        playNote=False
+        piecename="frereJacques"
+        tracknames=["frereJacques1"]
+
     tracknamefiles=""
-    tracknames=["satie_voix1","satie_voix2","satie_voix3"]
-    for ktrack,track in enumerate([satie_voix1,satie_voix2,satie_voix3]):
+    for ktrack,track in enumerate(Partition):
         print(60*'=')
         print("Track : ",ktrack)
         print("Name  : "+tracknames[ktrack])
@@ -299,15 +417,19 @@ if __name__ =="__main__":
                 os.system("play "+notenamefile+" vol 10dB > /dev/null 2>&1")  # jouer la note dans l'ordre
         os.system("sox "+notenamefiles+tracknames[ktrack]+'.wav')       # concatener les notes 
         tracknamefiles+=tracknames[ktrack]+".wav "+" "
+    print(tracknamefiles)
 
+    if len(Partition) > 1 : 
+        os.system("sox -m "+tracknamefiles+piecename+'.wav')                # mixer les voix
+        os.system("sox "+piecename+".wav "+" out.wav vol 12db bass +6")
+    else:
+        os.system("sox "+tracknames[0]+".wav "+" out.wav vol 12db bass +6")
 
-    os.system("sox -m "+tracknamefiles+piecename+'.wav')                # mixer les voix
-    os.system("sox "+piecename+".wav "+" out.wav vol 12db bass +6")
     os.system("mv out.wav "+piecename+".wav") 
     print(60*'=')
     print("Play  : ")
     print(60*'=')
     os.system("play "+piecename+".wav")  # jouer tout le morceau 
-
+    
 
     
