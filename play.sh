@@ -9,5 +9,5 @@ done
 
 while [ 1 ]
 do
-    mplayer ${tab[*]}
+    play ${tab[*]}
 done

@@ -73,7 +73,7 @@ def genHarmonics(o):
                 h.append((1.0,1.0))
     
     # 1
-    if False :
+    if True :
         for k in range(9):
             if k-o < 0 :
                 a=1.0/(18*abs(k-o))
@@ -87,7 +87,7 @@ def genHarmonics(o):
                 h.append((1.0,1.0))
 
     # 2
-    if True :
+    if False :
         for k in range(9):
             if k-o > 0 :
                 a=1.0/(4.5*abs(k-o)**3)
@@ -811,7 +811,7 @@ if __name__ =="__main__":
         knote=0
         setNotes=set(tuple(i) for i in track)
         for note in setNotes :
-            genNote(note,plotNote=False,writeWav=True,verbose=0)
+            genNote(note,plotNote=False,writeWav=True,verbose=11)
             print(note)
         print("# Keys  : ",len(setNotes))
         notenamefiles=''
